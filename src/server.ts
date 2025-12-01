@@ -31,23 +31,42 @@ app.use(cors({
   credentials: true
 }));
 
-// Compression middleware
 app.use(compression());
-
-// Logging middleware
 app.use(morgan('dev'));
-
-// Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-// Rate limiting
 app.use(rateLimiter);
 
 // Swagger UI
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'API Testing Platform - API Documentation',
+}));
 
-// Health check endpoint
+/**
+ * @swagger
+ * /health:
+ *   get:
+ *     summary: Health check endpoint
+ *     tags: [Health]
+ *     responses:
+ *       200:
+ *         description: Server is healthy
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: ok
+ *                 timestamp:
+ *                   type: string
+ *                   format: date-time
+ *                 uptime:
+ *                   type: number
+ *                   example: 1234.56
+ */
 app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({
     status: 'ok',
@@ -56,10 +75,8 @@ app.get('/health', (req: Request, res: Response) => {
   });
 });
 
-// API routes
 app.use('/api', apiRoutes);
 
-// 404 handler
 app.use((req: Request, res: Response) => {
   res.status(404).json({
     success: false,
@@ -67,18 +84,14 @@ app.use((req: Request, res: Response) => {
   });
 });
 
-// Error handling middleware (must be last)
 app.use(errorHandler);
 
-// Start server
 const startServer = async () => {
   try {
-    // Ensure uploads directory exists
     await ensureUploadsDirectory();
-    
-    // Connect to MongoDB
     await connectDatabase();
     
+    const baseUrl = `http://localhost:${PORT}`;
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);

@@ -17,7 +17,7 @@ const options = {
         description: 'Development server',
       },
       {
-        url: process.env.API_BASE_URL || 'https://api.example.com',
+        url: process.env.API_BASE_URL,
         description: 'Production server',
       },
     ],
