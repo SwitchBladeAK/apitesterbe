@@ -3,11 +3,9 @@ services:
     name: api-tester-backend
     env: node
     plan: starter
-    buildCommand: NPM_CONFIG_PRODUCTION=false npm ci && npm run build
+    buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
-      - key: NODE_ENV
-        value: production
       - key: PORT
         value: 5000
       - key: MONGODB_URI
@@ -18,4 +16,3 @@ services:
         sync: false
       - key: CORS_ORIGIN
         sync: false
-
