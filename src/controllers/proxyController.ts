@@ -8,8 +8,8 @@ const isHostAllowed = (targetUrl: string): boolean => {
   try {
     const u = new URL(targetUrl);
     if (!['http:', 'https:'].includes(u.protocol)) return false;
-    const allowed = process.env.ALLOWED_PROXY_HOSTS; // e.g., "dogapi.dog,api.example.com"
-    if (!allowed) return true; // no whitelist configured
+    const allowed = process.env.ALLOWED_PROXY_HOSTS; 
+    if (!allowed) return true; 
     const set = new Set(
       allowed
         .split(',')

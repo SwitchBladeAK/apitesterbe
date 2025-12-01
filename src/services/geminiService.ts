@@ -144,6 +144,7 @@ export class GeminiService {
     endpoints: IApiEndpoint[],
     folderStructure?: string
   ): string {
+    const baseUrl = process.env.API_BASE_URL;
     const groupedByFolder: Record<string, IApiEndpoint[]> = {};
     
     endpoints.forEach(endpoint => {
@@ -193,13 +194,13 @@ export class GeminiService {
 
     doc += `## 🚀 Getting Started\n\n`;
     doc += `### Base URL\n\n`;
-    doc += `\`\`\`\n{{base_url}}\n\`\`\`\n\n`;
+    doc += `\`\`\`\n${baseUrl}\n\`\`\`\n\n`;
     
     doc += `### Authentication\n\n`;
     doc += `> **Important:** Most endpoints require authentication. Include your JWT token in the Authorization header.\n\n`;
     doc += `\`\`\`http\nAuthorization: Bearer <your_token>\n\`\`\`\n\n`;
     doc += `**Example Request:**\n\n`;
-    doc += `\`\`\`bash\ncurl -H "Authorization: Bearer YOUR_TOKEN" \\\n  "{{base_url}}/api/endpoint"\n\`\`\`\n\n`;
+    doc += `\`\`\`bash\ncurl -H "Authorization: Bearer YOUR_TOKEN" \\\n  "${baseUrl}/api/endpoint"\n\`\`\`\n\n`;
 
     doc += `### Common Headers\n\n`;
     doc += `| Header | Value | Required |\n`;
@@ -231,7 +232,7 @@ export class GeminiService {
         }
 
         doc += `**Request:**\n\n`;
-        doc += `\`\`\`http\n${endpoint.method} /${endpoint.url}\nHost: {{base_url}}\nContent-Type: application/json\nAuthorization: Bearer <token>\n\`\`\`\n\n`;
+        doc += `\`\`\`http\n${endpoint.method} /${endpoint.url}\nHost: ${baseUrl}\nContent-Type: application/json\nAuthorization: Bearer <token>\n\`\`\`\n\n`;
 
         if (Object.keys(endpoint.headers || {}).length > 0) {
           doc += `#### Headers\n\n`;
@@ -262,7 +263,7 @@ export class GeminiService {
         doc += `#### Example Request\n\n`;
         doc += `**cURL:**\n\n`;
         doc += `\`\`\`bash\ncurl -X ${endpoint.method} \\\n`;
-        doc += `  "{{base_url}}/${endpoint.url}" \\\n`;
+        doc += `  "${baseUrl}/${endpoint.url}" \\\n`;
         if (Object.keys(endpoint.headers || {}).length > 0) {
           Object.entries(endpoint.headers || {}).forEach(([key, value]) => {
             doc += `  -H "${key}: ${value}" \\\n`;
@@ -276,7 +277,7 @@ export class GeminiService {
         doc += `\n\`\`\`\n\n`;
 
         doc += `**JavaScript (Fetch):**\n\n`;
-        doc += `\`\`\`javascript\nfetch('{{base_url}}/${endpoint.url}', {\n`;
+        doc += `\`\`\`javascript\nfetch('${baseUrl}/${endpoint.url}', {\n`;
         doc += `  method: '${endpoint.method}',\n`;
         doc += `  headers: {\n`;
         doc += `    'Content-Type': 'application/json',\n`;
@@ -294,7 +295,7 @@ export class GeminiService {
 
         doc += `**Python (Requests):**\n\n`;
         doc += `\`\`\`python\nimport requests\n\n`;
-        doc += `url = "{{base_url}}/${endpoint.url}"\n`;
+        doc += `url = "${baseUrl}/${endpoint.url}"\n`;
         doc += `headers = {\n`;
         doc += `    "Content-Type": "application/json",\n`;
         if (Object.keys(endpoint.headers || {}).length > 0) {
@@ -533,6 +534,7 @@ Format as clean, professional Markdown.`;
       ? `${endpointsToUse.length} of ${endpoints.length} endpoints`
       : `${endpoints.length} endpoints`;
     
+    const baseUrl = process.env.API_BASE_URL;
     return `Generate comprehensive, professional API documentation in Markdown format with EXCELLENT structure and formatting.
 
 ${structureInfo}
@@ -565,7 +567,7 @@ CRITICAL: Use proper Markdown formatting throughout. Follow this EXACT structure
 
 > **Note:** Brief introduction about the API, its purpose, and key features.
 
-- **Base URL:** \`{{base_url}}\`
+- **Base URL:** \`${baseUrl}\`
 - **API Version:** 1.0.0
 - **Authentication:** [Describe authentication method]
 
@@ -578,7 +580,7 @@ ${folderStructure ? `### Project Structure\n\n\`\`\`\n${folderStructure}\n\`\`\`
 ### Base URL
 
 \`\`\`
-{{base_url}}
+${baseUrl}
 \`\`\`
 
 ### Authentication
@@ -617,7 +619,7 @@ ${folderStructure ? 'Organize endpoints by folder structure. For each folder:' :
 
 \`\`\`http
 METHOD /endpoint/path
-Host: {{base_url}}
+Host: ${baseUrl}
 Content-Type: application/json
 Authorization: Bearer <token>
 \`\`\`
@@ -641,7 +643,7 @@ Authorization: Bearer <token>
 
 \`\`\`bash
 curl -X METHOD \\
-  "{{base_url}}/endpoint/path" \\
+  "${baseUrl}/endpoint/path" \\
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer YOUR_TOKEN" \\
   -d '{"field": "value"}'
@@ -650,7 +652,7 @@ curl -X METHOD \\
 **JavaScript Example:**
 
 \`\`\`javascript
-fetch('{{base_url}}/endpoint/path', {
+fetch('${baseUrl}/endpoint/path', {
   method: 'METHOD',
   headers: {
     'Content-Type': 'application/json',
@@ -669,7 +671,7 @@ fetch('{{base_url}}/endpoint/path', {
 \`\`\`python
 import requests
 
-url = "{{base_url}}/endpoint/path"
+url = "${baseUrl}/endpoint/path"
 headers = {
     "Content-Type": "application/json",
     "Authorization": "Bearer YOUR_TOKEN"
